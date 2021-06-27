@@ -57,25 +57,23 @@
 <script>
      $(document).ready(function () {
         getBeneficiario();
-     });
+    });
 
-   $(".idimg").click(function() {
-    alert("click"); 
-   });
-
-  function getBeneficiario(){
-      let url ="http://localhost:8052/api-beneficiario/beneficiario";
+   function getBeneficiario(){
+      let url ="http://localhost:8052/api-beneficiario/beneficiario/1";
       $.ajax({
         type:"GET",
         url:url,
         dataType: 'json',
         contentType: "application/json; charset=utf-8",
-        success:function(data){
-            $.each(data, function (i, d) {
+        headers: {"Authorization": "Bearer "+"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ3Y2lyaW5vIiwicm9sZXMiOlsiQURNSU4iLCJQRVJGSUwgQkVORU"+
+        "ZJQ0lBUklPIDEiLCJQRVJGSUwgQkVORUZJQ0lBUklPIDIiXSwiaWF0IjoxNjI0NzcyMDM4LCJleHAiOjE2MjQ3NzU2Mzh9.oeET--7F37UcLKxauy53_pHLqHo0loNFLqFo6V8k8lg"},
+        success:function(d){
+           
                 $("#tblnovo").append("<tr><td>"+d.nome_comp+"</td><td>"+d.idlogin.login+"</td><td>"+d.cpfcnpj+"</td><td>"+d.rg+"</td>"+
                                      "<td>"+d.carteirinha+"</td><!--<td>"+d.celular+"</td>--><td>"+d.telefone+"</td>"+
-                                     "<td>"+d.idlogin.email+"</td><td class='idimg'><img src='../img/alt.png'  alt='beneficarioCadastro'></td></tr>");
-            });
+                                     "<td>"+d.idlogin.email+"</td><td class='id_ima_atl' onclick='alert('Deu certo');'><img src='../img/alt.png'  alt='beneficarioCadastro'></td></tr>");
+           
         },
         error:function(err){
             console.log("Deu erro");
