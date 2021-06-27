@@ -53,6 +53,29 @@
                 </div>
               </div>
             </div>
+            <!--Sexo-->
+            <div class="row">  
+                <div class="col-1">                            
+                  <div class="input-group mt-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="nmSexo" value="1" id="radioSexo">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                          Feminino
+                        </label>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-2">
+                  <div class="input-group mt-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="nmSexo" value="2" id="radioSexo">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                          Masculino
+                        </label>
+                      </div>
+                  </div>
+                </div>
+              </div>
                 <!--CPF/CNPJ-->
                 <div class="input-group mt-2">
                     <input type="text" id="cpf" class="form-control bg-light" placeholder="CPF/CNPJ">
@@ -87,7 +110,7 @@
                     <div class="col-1">                            
                       <div class="input-group mt-2">
                         <label for="ddd"></label>
-                        <input type="text" id="ddd" class="form-control" id="ddd" placeholder="DDD - 00">
+                        <input type="text" id="ddd" class="form-control" id="ddd" placeholder="DDD">
                       </div>
                     </div>
                     <div class="col-5">
@@ -101,7 +124,7 @@
                         <div class="col-1">                            
                           <div class="input-group mt-2">
                             <label for="ddd"></label>
-                            <input type="text" id="cddd"class="form-control" id="ddd" placeholder="DDD 00">
+                            <input type="text" id="cddd"class="form-control" id="ddd" placeholder="DDD">
                           </div>
                         </div>
                         <div class="col-5">
@@ -120,7 +143,27 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row">  
+                    <div class="col-3">                            
+                      <div class="input-group mt-2">
+                          <input type="password" id="senha" class="form-control bg-light" placeholder="senha">
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="input-group mt-2">
+                          <input type="password" id="senhaConfirm" class="form-control bg-light" placeholder="Confirma senha">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">  
+                    <div class="col-6">                            
+                      <div class="input-group mt-2">
+                          <input type="text" id="login" class="form-control bg-light" placeholder="Login">
+                      </div>
+                    </div>
+                  </div>
                 <input type="button" id="btn-enviar" value ="Enviar" class="btnw btn-info btn-block mt-2">
+                <!--<input type="button" id="btn-enviar2" value ="Enviar" class="btnw btn-info btn-block mt-2">-->
             </div>
         </div>
     </div>
@@ -147,7 +190,6 @@
             error: function(erro){
                 console.log('Aconteceu um erro');
                 console.log(erro.responseText);
-                alert('deu erro');
             }
         });
     });
@@ -172,18 +214,58 @@
             error: function(erro){
                 console.log('Aconteceu um erro');
                 console.log(erro.responseText);
-                alert('deu erro');
             }
         });
     });
 
   $( "#btn-enviar" ).click(function() {
      sendBeneficario();
+    //getFormBeneficiario();
   });
+
+  $( "#btn-enviar2" ).click(function() {
+    $("#login").removeClass("form-control bg-light").addClass("form-control is-invalid");
+  });
+
+  $("#login").blur(function (){  
+    getLogin();
+  });  
+  
+  function validaLogin(lg){
+     //----------------------------------------
+     let login = $("#login").val();
+        $.ajax({
+            type: "get",
+            url: url ="http://localhost:8052/api-util/login/"+login,
+            dataType: 'text',
+            contentType: "application/json; charset=utf-8",
+            success: function (obj) {
+                if(obj == 1){
+                    $("#login").removeClass("form-control bg-light").addClass("form-control is-valid");
+                }
+                else{
+                    $("#login").removeClass("form-control bg-light").addClass("form-control is-invalid");
+                }
+            },
+            error: function(erro){
+                console.log('Aconteceu um erro');
+                console.log(erro.responseText);
+            }
+        });
+  }
+
+  function getLogin(){
+    let login = $("#login").val();
+    if(login != null){
+        validaLogin(login);
+    }
+    else
+     return;
+  }
 
   function sendBeneficario(){
       let url = "http://localhost:8052/api-beneficiario/beneficiario";
-      let benef = getBeneficiario();
+      let benef = getFormBeneficiario();
 
       $.ajax({
         type:"POST",
@@ -195,9 +277,8 @@
             alert("Sucesso!!");
         },
         error:function(err){
-            console.log("Deu erro");
+            console.log("erro");
             console.log(err.responseText);
-            alert("erro");
         }
       });
   }
@@ -220,6 +301,29 @@
         sexo: "2",
         ativo: "1",
         rg: "7669065521314"
+      };
+
+      return beneficario;
+  }
+
+  function getFormBeneficiario(){
+    var beneficario = {
+        idlogin: {
+            login: $("#login").val(),
+            senha: $("#senha").val(),
+            email: $("#email").val(),
+            ativo: "1",
+    },
+        nome_comp: $("#nome").val(),
+        cpfcnpj: $("#cpf").val(),
+        data_nasc: "2004-05-22T13:51:06.000+00:00",
+        idestado: $("#slIdEstado").val(),
+        cidade: $("#slIdCidade").val(),
+        telefone: $("#tel").val(),
+        celular: $("#cel").val(),
+        sexo: $("input[name='nmSexo']:checked").val(),
+        ativo: "1",
+        rg: $("#rg").val()
       };
 
       return beneficario;
